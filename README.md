@@ -12,6 +12,25 @@ The system is designed to work with real-world expense data and help users make 
 
 ---
 
+## ⚠️ Important Notes
+
+* This repository contains **trained `.pkl` model files only** (training code is not included)
+
+* Folder structure and input format follow **standard assumed values**
+  * Example: weekday, rolling average, encoded categories, etc.
+
+* Models are trained with a **default assumption of INR (Indian Rupees)**
+
+* The system is **currency-independent**, meaning it works with any currency if data is consistent
+
+* Future versions may include **separate trained models for different currencies**:
+  * INR
+  * USD
+  * EUR
+  * and more
+
+---
+
 ## Training Data Note
 
 This model is trained using a **custom CSV dataset of expense records** containing fields such as date, amount, and category. 
@@ -19,147 +38,117 @@ This model is trained using a **custom CSV dataset of expense records** containi
 The dataset includes realistic financial transactions across multiple categories like food, travel, bills, entertainment, health, and shopping. The models were trained specifically on this structured data to learn spending patterns and behavior trends.
 
 ---
+
 ## Currency Assumption and Future Support
 
-* The current model is trained on expense data where amounts are treated as **generic numerical values**
+* The current model treats amounts as **numerical values**
 
-* For practical usage, this implementation can be considered as **INR (Indian Rupees)** by default
+* By default, usage can be considered as **INR**
 
-* The system is **currency-independent**, meaning it can work with any currency if the data is consistent
+* Risk thresholds (example: amount > 500 → HIGH risk) are based on this dataset
 
-* Risk thresholds (such as amount > 500) are based on the current dataset and may need adjustment depending on the currency used
+* These thresholds may need adjustment depending on currency or region
 
 ---
 
 ### Future Updates
 
-* Support for multiple currencies (USD, EUR, etc.) will be added in future versions
-* Improved scaling and normalization will be introduced for better global usage
-* Updated models will be released with enhanced accuracy and features
+* Multi-currency trained models (USD, EUR, etc.)
+* Better scaling and normalization
+* Improved accuracy and optimization
+* Expanded dataset support
 
 ---
 
-### Note to Users
+## Note to Users
 
-You can use these `.pkl` models in your own applications and projects.
+You can directly use these `.pkl` models in your own applications without retraining.
+
 More advanced versions and improvements will be released over time.
 
-If you are interested in updates and new models, follow me on Hugging Face:
-
-**Krishnamohan Yagneswaran**
-
+---
 
 ## Models Used and Training Process
 
 ### Models Used
 
-* Random Forest Regressor → for spending prediction
-* Gradient Boosting Regressor → for improved prediction accuracy
-* Logistic Regression → for risk classification
-* Decision Tree Classifier → for comparison
-* Random Forest Classifier → for better classification performance
-* Support Vector Machine (SVM) → for risk prediction comparison
-* MLP Classifier → for NLP-based category prediction
-* K-Means Clustering → for grouping spending behavior
+* Random Forest Regressor → Spending prediction  
+* Gradient Boosting Regressor → Improved prediction accuracy  
+* Logistic Regression → Risk classification  
+* Decision Tree Classifier → Baseline comparison  
+* Random Forest Classifier → Improved classification  
+* Support Vector Machine (SVM) → Risk comparison  
+* MLP Classifier → NLP-based category prediction  
+* K-Means Clustering → Behavior grouping  
 
 ---
 
 ### Training Process (Step by Step)
 
-* Load CSV dataset containing date, amount, and category
-
-* Remove duplicate records and handle missing values
-
-* Convert date into useful features (day, month, weekday)
-
-* Create rolling average feature for spending trends
-
-* Convert category column into numerical format (one-hot encoding)
-
-* Split dataset into training and testing sets
-
+* Load CSV dataset (date, amount, category)
+* Clean dataset (remove duplicates, handle missing values)
+* Feature engineering:
+  * Extract weekday, month, etc.
+  * Create rolling average
+* Encode categorical data (one-hot encoding)
 * Train regression models:
-
   * Random Forest
   * Gradient Boosting
-
-* Evaluate using MAE and select best model
-
-* Create risk labels (amount > 500 → HIGH risk)
-
-* Train multiple classification models
-
-* Compare using recall score and select best model
-
+* Evaluate models using MAE and select best model
+* Create risk labels:
+  * amount > 500 → HIGH risk
+* Train classification models and compare using recall
 * Train NLP model:
-
-  * Convert text using TF-IDF
-  * Train MLP classifier for category prediction
-
+  * TF-IDF vectorization
+  * MLP classifier
 * Apply K-Means clustering:
-
-  * Group data based on amount and weekday
+  * Group based on spending patterns
 
 ---
 
 ### Model Saving
 
-* All trained models are saved using `joblib`
-
-* Saved as `.pkl` files for reuse without retraining
-
-* Files include:
-
+* All models are saved using `joblib`
+* Stored as reusable `.pkl` files
+* Includes:
   * Prediction model
   * Risk model
-  * NLP model and vectorizer
+  * NLP model + vectorizer
   * Clustering model
   * Feature structure
 
-* These `.pkl` files act as the final packaged AI system
-
+---
 
 ## What This Model Does
 
-This system provides the following outputs:
+This system provides:
 
-* Predicts how much money you may spend
-* Identifies if a transaction is high risk or low risk
-* Classifies the type of expense (food, travel, bills, etc.)
-* Groups spending behavior into clusters
-* Provides a simple financial decision suggestion
+* Spending prediction  
+* Risk detection (HIGH / LOW)  
+* Expense category classification  
+* Behavior clustering  
+* Financial decision suggestions  
 
 ---
 
 ## About the `.pkl` Files
 
-All the `.pkl` files in this repository are **trained machine learning models and components**. These files are saved using `joblib` and allow the system to be reused without retraining.
+All `.pkl` files are **pre-trained machine learning models**.
 
-### Files Explanation:
+### Files Included:
 
-* `spending_model.pkl`
-  → Predicts future spending amount
-
-* `risk_model.pkl`
-  → Classifies whether spending is HIGH or LOW risk
-
-* `nlp_model.pkl`
-  → Predicts category from text input
-
-* `tfidf.pkl`
-  → Converts text into numerical format for NLP
-
-* `kmeans.pkl`
-  → Groups spending behavior into clusters
-
-* `feature_columns.pkl`
-  → Stores the correct input structure used during training
+* `spending_model.pkl` → Predict spending  
+* `risk_model.pkl` → Risk classification  
+* `nlp_model.pkl` → Category prediction  
+* `tfidf.pkl` → Text vectorizer  
+* `kmeans.pkl` → Clustering  
+* `feature_columns.pkl` → Input structure  
 
 ---
 
 ## How to Use
 
-### 1. Install Required Libraries
+### 1. Install Requirements
 
 ```bash
 pip install pandas numpy scikit-learn joblib
@@ -197,21 +186,21 @@ print(prediction)
 
 ## System Features
 
-* Uses multiple machine learning models together
-* Works with structured CSV expense data
-* Includes NLP for text-based classification
-* Uses clustering for behavior analysis
-* Provides decision-making suggestions
+* Multi-model AI system  
+* Works on structured CSV data  
+* Includes NLP capabilities  
+* Behavioral clustering  
+* Easy integration using `.pkl` files  
 
 ---
 
 ## Use Cases
 
-* Personal finance tracking
-* Budget planning
-* Expense monitoring applications
-* Financial analytics systems
-* Academic and learning projects
+* Personal finance apps  
+* Budget tracking systems  
+* Expense analytics tools  
+* Academic ML projects  
+* Financial dashboards  
 
 ---
 
@@ -221,39 +210,36 @@ This project is licensed under the **MIT License**.
 
 You are free to:
 
-* Use
-* Modify
-* Distribute
-* Use commercially
-
-As long as the original license and author credit are included.
+* Use  
+* Modify  
+* Distribute  
+* Use commercially  
 
 ---
 
-## Credits
+## ⚠️ Credit Requirement
 
-If you use this project in your work, research, application, or product, it would be appreciated if you provide credit:
+If you use this project, models, or system in any form (personal, academic, or commercial), you **must provide credit**:
 
 **Krishnamohan Yagneswaran**
-
-This helps support further development and recognition of the project.
 
 ---
 
 ## Future Improvements
 
-* Web application interface
-* Mobile application integration
-* API deployment
-* Real-time analytics
+* Web application interface  
+* Mobile app integration  
+* API deployment  
+* Real-time analytics  
+* Multi-currency trained models  
 
 ---
 
 ## Conclusion
 
-This project demonstrates how multiple machine learning techniques can be combined into a single intelligent system. It is simple, practical, and scalable for real-world applications.
+This project demonstrates how multiple machine learning models can be combined into a single intelligent financial system. It is simple, scalable, and ready for real-world usage.
 
 ---
 
-**Created by:**
+**Created by:**  
 Krishnamohan Yagneswaran
